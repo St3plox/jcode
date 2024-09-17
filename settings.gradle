@@ -1,0 +1,5 @@
+rootProject.name = 'jcode'
+include 'api-gateway'
+include 'auth-service'
+include 'discovery-server'
+
