@@ -23,6 +23,7 @@ public class Submission {
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
+    @Column(name = "user_id")
     private Long userID;
 
     private String code;

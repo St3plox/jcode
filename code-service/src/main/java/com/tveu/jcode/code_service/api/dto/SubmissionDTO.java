@@ -15,7 +15,8 @@ public record SubmissionDTO(
         String code,
         Language language,
         SubmissionStatus submissionStatus,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 
 ) {
 }

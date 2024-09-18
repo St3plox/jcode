@@ -1,11 +1,12 @@
 package com.tveu.jcode.code_service.core.service;
 
-import com.tveu.jcode.code_service.api.dto.ResultCreateRequest;
 import com.tveu.jcode.code_service.api.dto.ResultDTO;
+
+import java.util.UUID;
 
 public interface ResultService {
 
-    ResultDTO create(ResultCreateRequest createRequest);
+    ResultDTO create(ResultDTO createRequest);
 
-    ResultDTO getByID(Long id);
+    ResultDTO getByID(UUID id);
 }
