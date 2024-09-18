@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: code-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/code
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations:
+      - db.migration
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8662/eureka
+    register-with-eureka: true
+    fetch-registry: true
