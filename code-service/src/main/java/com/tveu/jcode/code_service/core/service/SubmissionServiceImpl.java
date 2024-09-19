@@ -6,6 +6,8 @@ import com.tveu.jcode.code_service.api.dto.SubmissionDTO;
 import com.tveu.jcode.code_service.core.entity.SubmissionStatus;
 import com.tveu.jcode.code_service.core.exception.ErrorCode;
 import com.tveu.jcode.code_service.core.exception.ServiceException;
+import com.tveu.jcode.code_service.core.kafka.KafkaProducer;
+import com.tveu.jcode.code_service.core.kafka.KafkaTopic;
 import com.tveu.jcode.code_service.core.mapper.SubmissionMapper;
 import com.tveu.jcode.code_service.core.repository.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +22,17 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final SubmissionMapper submissionMapper;
 
+    private final KafkaProducer kafkaProducer;
+
     @Override
     public SubmissionDTO submit(SubmissionCreateRequest createRequest) {
 
         var submission = submissionRepository.save(submissionMapper.map(createRequest));
 
-        //Send to code execution worker via apache kafka
+        var submissionDTO =  submissionMapper.map(submission);
+        kafkaProducer.sendMessage(submissionDTO, KafkaTopic.SUBMISSION_TOPIC);
 
-        return submissionMapper.map(submission);
+        return submissionDTO;
     }
 
     @Override

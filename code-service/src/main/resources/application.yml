@@ -1,6 +1,11 @@
 spring:
   application:
     name: code-service
+  kafka:
+    bootstrap-servers: kafka:9092
+    admin:
+      properties:
+        bootstrap.servers: kafka:9092
   datasource:
     url: jdbc:postgresql://localhost:5432/code
     username: postgres
