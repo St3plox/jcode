@@ -1,5 +1,6 @@
 package com.tveu.jcode.code_service.core.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tveu.jcode.code_service.api.dto.SubmissionDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +12,19 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, SubmissionDTO> submissionKafkaTemplate;  // Constructor injection
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void sendMessage(SubmissionDTO message, String topicName) {
-        log.info("Sending : {}", message);
-        log.info("--------------------------------");
+        try {
+            // Serialize SubmissionDTO to JSON
+            String jsonMessage = objectMapper.writeValueAsString(message);
+            log.info("Sending : {}", jsonMessage);
+            log.info("--------------------------------");
 
-        submissionKafkaTemplate.send(topicName, message);
+            kafkaTemplate.send(topicName, jsonMessage);  // Send the JSON string
+        } catch (Exception e) {
+            log.error("Failed to send message: {}", e.getMessage(), e);
+        }
     }
 }

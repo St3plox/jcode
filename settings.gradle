@@ -3,4 +3,5 @@ include 'api-gateway'
 include 'auth-service'
 include 'discovery-server'
 include 'code-service'
+include 'code-exec-worker'
 

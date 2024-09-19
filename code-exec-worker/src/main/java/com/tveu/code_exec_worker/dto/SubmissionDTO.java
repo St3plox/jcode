@@ -1,7 +1,5 @@
-package com.tveu.jcode.code_service.api.dto;
+package com.tveu.code_exec_worker.dto;
 
-import com.tveu.jcode.code_service.core.entity.Language;
-import com.tveu.jcode.code_service.core.entity.SubmissionStatus;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: code-exec-worker
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: code
+      auto-offset-reset: earliest
+
+server:
+  port: 8083

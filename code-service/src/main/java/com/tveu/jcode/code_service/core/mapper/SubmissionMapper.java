@@ -30,8 +30,8 @@ public class SubmissionMapper {
                 .code(submission.getCode())
                 .userID(submission.getUserID())
                 .language(submission.getLanguage())
-                .createdAt(submission.getCreatedAt())
-                .updatedAt(submission.getUpdatedAt())
+                .createdAt(submission.getCreatedAt().toString())
+                .updatedAt(submission.getUpdatedAt().toString())
                 .build();
     }
 
