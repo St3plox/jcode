@@ -11,8 +11,9 @@ import (
 type Language string
 
 const (
-	GO   Language = "GO"
-	JAVA Language = "JAVA"
+	GO     Language = "GO"
+	JAVA   Language = "JAVA"
+	PYTHON Language = "PYTHON"
 )
 
 type SubmissionStatus string
@@ -38,7 +39,6 @@ const timeLayout = "2006-01-02T15:04:05.999999"
 
 // Custom UnmarshalJSON to handle time parsing
 func (s *SubmissionDTO) UnmarshalJSON(data []byte) error {
-	// Create a temporary struct to avoid recursion
 	type Alias SubmissionDTO
 	aux := &struct {
 		CreatedAt string `json:"createdAt"`
@@ -51,15 +51,13 @@ func (s *SubmissionDTO) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return fmt.Errorf("error unmarshaling SubmissionDTO %w", err)
 	}
-
-	// Parse CreatedAt time
+	
 	createdAt, err := time.Parse(timeLayout, aux.CreatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to parse createdAt %w", err)
 	}
 	s.CreatedAt = createdAt
 
-	// Parse UpdatedAt time
 	updatedAt, err := time.Parse(timeLayout, aux.UpdatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to parse updatedAt %w", err)
