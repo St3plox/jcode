@@ -7,7 +7,7 @@ import (
 	"github.com/St3pegor/jcode/broker"
 )
 
-func DockerImage(lang broker.Language) (string, error) {
+func dockerImage(lang broker.Language) (string, error) {
 	switch lang {
 	case broker.GO:
 		return "golang:latest", nil
