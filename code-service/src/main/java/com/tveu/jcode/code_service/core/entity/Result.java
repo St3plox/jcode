@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "submissions")
+@Table(name = "results")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,15 +19,15 @@ import java.util.UUID;
 public class Result {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "submission_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "submission_id", referencedColumnName = "id", nullable = false)
     private Submission submission;
 
     private String output;
-
     private String errors;
 
     @CreationTimestamp

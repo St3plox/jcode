@@ -1,6 +1,6 @@
 module github.com/St3pegor/jcode
 
-go 1.23.1
+go 1.22.6
 
 require (
 	github.com/St3plox/Blogchain v0.4.1

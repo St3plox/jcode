@@ -20,6 +20,7 @@ import java.util.UUID;
 public class Submission {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 

@@ -8,8 +8,10 @@ import (
 	"time"
 
 	"github.com/St3pegor/jcode/broker/consumer"
+	"github.com/St3pegor/jcode/broker/producer"
 	"github.com/St3plox/Blogchain/foundation/logger"
 	"github.com/ardanlabs/conf/v3"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/rs/zerolog"
 )
 
@@ -69,6 +71,15 @@ func run(log *zerolog.Logger) error {
 	defer log.Info().Msg("shutdown complete")
 
 	// -------------------------------------------------------------------------
+	// initializing producer support
+	kafkaProducer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost"})
+	if err != nil {
+		return err
+	}
+
+	resultProducer := producer.NewResultProducer(kafkaProducer)
+
+	// -------------------------------------------------------------------------
 	// initializing consumer support
 
 	kafkaAdress := os.Getenv("KAFKA_ADDRESS")
@@ -76,7 +87,7 @@ func run(log *zerolog.Logger) error {
 		kafkaAdress = cfg.SubmissionConsumer.Address
 	}
 
-	//TODO: remove to cfcg
+	//TODO: remove to cfg
 	subConsumer, err := consumer.NewSubmissionConsumer(
 		"localhost:9092",
 		"jcode-group",
@@ -89,7 +100,8 @@ func run(log *zerolog.Logger) error {
 		return err
 	}
 
-	subController := consumer.New(subConsumer, time.Second, log)
+	shutdown := make(chan os.Signal, 1)
+	subController := consumer.New(subConsumer, resultProducer, time.Second, log, shutdown)
 
 	serverErrors := make(chan error, 1)
 	go func() {
@@ -106,17 +118,18 @@ func run(log *zerolog.Logger) error {
 	case err := <-serverErrors:
 		return fmt.Errorf("server error: %w", err)
 
-		// case sig := <-shutdown:
-		// 	log.Info().
-		// 		Str("status", "shutdown started").
-		// 		Str("signal", sig.String()).
-		// 		Msg("shutdown")
-		// 	defer log.Info().Str("status", "shutdown complete").
-		// 		Str("signal", sig.String()).
-		// 		Msg("shutdown")
+	case sig := <-shutdown:
+		log.Info().
+			Str("status", "shutdown started").
+			Str("signal", sig.String()).
+			Msg("shutdown")
+		return fmt.Errorf("Shutdown")
+		defer log.Info().Str("status", "shutdown complete").
+			Str("signal", sig.String()).
+			Msg("shutdown")
 
-		// 	ctx, cancel := context.WithTimeout(context.Background(), cfg.Web.ShutdownTimeout)
-		// 	defer cancel()
+		_, cancel := context.WithTimeout(context.Background(), cfg.Web.ShutdownTimeout)
+		defer cancel()
 
 	}
 
