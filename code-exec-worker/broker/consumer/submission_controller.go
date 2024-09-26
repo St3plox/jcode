@@ -25,13 +25,14 @@ type Controller struct {
 }
 
 // New creates a new Controller
-//TODO: Replace with cfg
-func New(consumer submissionConsumer, producer producer.Producer, delay time.Duration, log *zerolog.Logger, shutdown chan) *Controller {
+// TODO: Replace with cfg
+func New(consumer submissionConsumer, producer producer.Producer, delay time.Duration, log *zerolog.Logger, shutdown chan os.Signal) *Controller {
 	return &Controller{
 		consumer: consumer,
 		producer: producer,
 		delay:    delay,
 		log:      log,
+		shutdown: shutdown,
 	}
 }
 
@@ -60,8 +61,8 @@ func (c *Controller) ListenForEvents(ctx context.Context) error {
 				c.producer.ProduceResultEvents([]producer.ResultDTO{producer.MapTo(subEvent, output, err.Error())})
 				return err
 			}
-			
-			c.producer.ProduceResultEvents([]producer.ResultDTO{producer.MapTo(subEvent, output, err.Error())})
+
+			c.producer.ProduceResultEvents([]producer.ResultDTO{producer.MapTo(subEvent, output, "")})
 			c.log.Info().Msg(subEvent.ID.String() + " processed \n output: " + output)
 		}
 	}

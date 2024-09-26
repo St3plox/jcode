@@ -123,13 +123,12 @@ func run(log *zerolog.Logger) error {
 			Str("status", "shutdown started").
 			Str("signal", sig.String()).
 			Msg("shutdown")
-		return fmt.Errorf("Shutdown")
 		defer log.Info().Str("status", "shutdown complete").
 			Str("signal", sig.String()).
 			Msg("shutdown")
-
 		_, cancel := context.WithTimeout(context.Background(), cfg.Web.ShutdownTimeout)
 		defer cancel()
+		return fmt.Errorf("Shutdown")
 
 	}
 
