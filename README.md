@@ -71,7 +71,7 @@ Uses microservice architecture for backend and apache kafka for async communicat
 
 
 ### Service design
-![Jcode](./assets/Code Execution service - Page 2.png)
+![jcode](./assets/jcode.png)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
