@@ -1,11 +1,11 @@
 package com.tveu.jcode.code_service.api.dto;
 
+import java.util.UUID;
+
 import com.tveu.jcode.code_service.core.entity.Language;
 import com.tveu.jcode.code_service.core.entity.SubmissionStatus;
-import lombok.Builder;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import lombok.Builder;
 
 @Builder
 public record SubmissionDTO(
