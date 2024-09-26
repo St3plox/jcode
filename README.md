@@ -12,11 +12,11 @@
 <!--     <a href="https://github.com/St3plox/Blogchain"><strong>Explore the docs »</strong></a> -->
     <br />
     <br />
-    <a href="https://github.com/St3plox/Blogchain/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/St3plox/jcode/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
-    <a href="https://github.com/St3plox/Blogchain/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/St3plox/jcode/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
     .
-    <a href="https://pkg.go.dev/github.com/St3plox/Blogchain">Documentation</a>
+    <a href="https://pkg.go.dev/github.com/St3plox/jcode">Documentation</a>
   </p>
 </div>
 
