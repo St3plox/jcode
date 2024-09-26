@@ -107,7 +107,6 @@ At current state of the project you need to be able to launch gradle and go proj
     cd code-exec-worker
     go run ./cmd
    ```
-Frontend can be accessed on port 8080, backend - 3000, swagger - 4000
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
