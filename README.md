@@ -44,7 +44,6 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -168,11 +167,6 @@ Egor - st3pegor@gmail.com
 
 
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* [Ardanlabs Github](https://github.com/ardanlabs)
-* [Bootstrap Vue navbar](https://bootstrap-vue.org/docs/components/navbar)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
