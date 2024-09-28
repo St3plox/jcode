@@ -3,13 +3,14 @@ package producer
 import (
 	"encoding/json"
 
+	"github.com/St3pegor/jcode/broker"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
 var topic = "result"
 
 type Producer interface {
-	ProduceResultEvents(likesEvents []ResultDTO) error
+	ProduceResultEvents(likesEvents []broker.ResultDTO) error
 }
 
 type ResultProducer struct {
@@ -20,7 +21,7 @@ func NewResultProducer(producer *kafka.Producer) *ResultProducer {
 	return &ResultProducer{producer}
 }
 
-func (lp *ResultProducer) ProduceResultEvents(resultEvents []ResultDTO) error {
+func (lp *ResultProducer) ProduceResultEvents(resultEvents []broker.ResultDTO) error {
 	for _, resultEvent := range resultEvents {
 
 		encodedEvent, err := json.Marshal(resultEvent)

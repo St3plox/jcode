@@ -57,18 +57,18 @@ func (c *Controller) ConcurrentListenForEvents(ctx context.Context) error {
 			exec, err := codeexec.NewDockerExecutor(subEvent.Language)
 			if err != nil {
 				c.log.Error().Err(err).Msg("Failed to create code executor")
-				c.producer.ProduceResultEvents([]producer.ResultDTO{producer.MapTo(subEvent, "", err.Error())})
+				c.producer.ProduceResultEvents([]broker.ResultDTO{broker.MapTo(subEvent, "", err.Error())})
 				return
 			}
 
 			output, err := exec.Execute(subEvent.Code)
 			if err != nil {
 				c.log.Error().Err(err).Msg("Failed to execute code")
-				c.producer.ProduceResultEvents([]producer.ResultDTO{producer.MapTo(subEvent, output, err.Error())})
+				c.producer.ProduceResultEvents([]broker.ResultDTO{broker.MapTo(subEvent, output, err.Error())})
 				return
 			}
 
-			c.producer.ProduceResultEvents([]producer.ResultDTO{producer.MapTo(subEvent, output, "")})
+			c.producer.ProduceResultEvents([]broker.ResultDTO{broker.MapTo(subEvent, output, "")})
 			c.log.Info().Msg(subEvent.ID.String() + " processed \n output: " + output)
 		}(subEvent) 
 	}

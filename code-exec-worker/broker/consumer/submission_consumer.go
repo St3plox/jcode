@@ -72,11 +72,10 @@ func (lc *SubmissionConsumer) Consume(ctx context.Context) (<-chan broker.Submis
 				return
 
 			default:
-
 				msg, err := lc.consumer.ReadMessage(-1)
 				if err != nil {
 
-					// Log the error and retry after a backoff period
+					
 					lc.log.Error().Err(err).Msg("Error reading message, retrying with backoff")
 					time.Sleep(retryDelay)
 					retryDelay *= 2
