@@ -23,8 +23,8 @@ public class Result {
     @GeneratedValue(generator = "uuid2")
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "submission_id", referencedColumnName = "id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "submission_id", nullable = false)
     private Submission submission;
 
     private String output;

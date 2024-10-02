@@ -41,4 +41,7 @@ public class Submission {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "submission", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private Result result;
+
 }
