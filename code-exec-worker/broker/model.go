@@ -11,9 +11,10 @@ import (
 type Language string
 
 const (
-	GO     Language = "GO"
-	JAVA   Language = "JAVA"
-	PYTHON Language = "PYTHON"
+	GO         Language = "GO"
+	JAVA       Language = "JAVA"
+	PYTHON     Language = "PYTHON"
+	timeLayout          = "2006-01-02T15:04:05.999999"
 )
 
 type SubmissionStatus string
@@ -34,8 +35,22 @@ type SubmissionDTO struct {
 	UpdatedAt        time.Time        `json:"updatedAt"`
 }
 
-// Custom time layout for parsing timestamps without timezones
-const timeLayout = "2006-01-02T15:04:05.999999"
+type ResultDTO struct {
+	ID           string `json:"id"`
+	SubmissionID string `json:"submission_id"`
+	Output       string `json:"output"`
+	Errors       string `json:"errors"`
+}
+
+func MapTo(subEvent SubmissionDTO, output string, errors string) ResultDTO {
+
+	return ResultDTO{
+		ID:           uuid.New().String(),
+		SubmissionID: subEvent.ID.String(),
+		Output:       output,
+		Errors:       errors,
+	}
+}
 
 // Custom UnmarshalJSON to handle time parsing
 func (s *SubmissionDTO) UnmarshalJSON(data []byte) error {
@@ -51,7 +66,7 @@ func (s *SubmissionDTO) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return fmt.Errorf("error unmarshaling SubmissionDTO %w", err)
 	}
-	
+
 	createdAt, err := time.Parse(timeLayout, aux.CreatedAt)
 	if err != nil {
 		return fmt.Errorf("failed to parse createdAt %w", err)

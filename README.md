@@ -32,7 +32,7 @@
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
-    <li> <a href="#service-design">Service design<a/></li>
+    <li> <a href="#service-design"> Service design </a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -61,10 +61,12 @@ Uses microservice architecture for backend and apache kafka for async communicat
 ### Built With
 
 * [![Java][Java]][Java-url]
+* [![Spring][Spring]][Spring-url]
 * [![Golang][Golang]][Golang-url]
 * [![Apache-Kafka][Apache-Kafka]][Apache-Kafka-url]
 * [![PostgreSQL][PostgreSQL]][PostgreSQL-url]
-* [![Spring][Spring]][Spring-url]
+* [![Docker][Docker]][Docker-url]
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -116,8 +118,7 @@ At current state of the project you need to be able to launch gradle and go proj
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Async execution
-- [ ] Caching
+- [X] Async execution
 - [ ] Documentation
 - [ ] Auth
 - [ ] Testing 
@@ -186,3 +187,5 @@ Egor - st3pegor@gmail.com
 [Spring]: https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white
 [Spring-url]: https://spring.io/
 
+[Docker]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[Docker-url]: https://www.docker.com/
