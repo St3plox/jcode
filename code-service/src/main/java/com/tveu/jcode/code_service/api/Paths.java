@@ -18,4 +18,10 @@ public class Paths {
     public static final String PROBLEM_PUT = PROBLEM + "/" + ID;
     public static final String PROBLEM_POST = PROBLEM;
     public static final String PROBLEM_DELETE = PROBLEM + "/" + ID;
+
+    public static final String TEST_CASE = ROOT + "/case";
+    public static final String TEST_CASE_GET = TEST_CASE + "/" + ID;
+    public static final String TEST_CASE_POST = TEST_CASE;
+    public static final String TEST_CASE_PUT = TEST_CASE + "/" + ID;
+    public static final String TEST_CASE_DELETE = TEST_CASE + "/" + ID;
 }

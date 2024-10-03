@@ -11,22 +11,27 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "test_cases")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TestCase {
 
     @Id
     @GeneratedValue(generator = "uuid2")
-    private Long id;
+    private UUID id;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,9 +45,11 @@ public class TestCase {
     private String output;
 
     @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "testCase", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
