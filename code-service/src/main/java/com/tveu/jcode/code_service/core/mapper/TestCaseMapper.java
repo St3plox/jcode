@@ -9,6 +9,8 @@ import com.tveu.jcode.code_service.core.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -38,5 +40,13 @@ public class TestCaseMapper {
                 .output(testCase.getOutput())
                 .problemID(testCase.getProblem().getId().toString())
                 .build();
+    }
+
+    public List<TestCaseDTO> map(List<TestCase> testCases) {
+
+        List<TestCaseDTO> dtos = new ArrayList<>();
+        testCases.forEach(testCase -> dtos.add(map(testCase)));
+
+        return dtos;
     }
 }

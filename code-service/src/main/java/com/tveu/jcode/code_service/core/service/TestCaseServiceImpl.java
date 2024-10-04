@@ -7,10 +7,12 @@ import com.tveu.jcode.code_service.core.entity.TestCase;
 import com.tveu.jcode.code_service.core.exception.ErrorCode;
 import com.tveu.jcode.code_service.core.exception.ServiceException;
 import com.tveu.jcode.code_service.core.mapper.TestCaseMapper;
+import com.tveu.jcode.code_service.core.repository.ProblemRepository;
 import com.tveu.jcode.code_service.core.repository.TestCaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,6 +21,7 @@ public class TestCaseServiceImpl implements TestCaseService {
 
     private final TestCaseRepository testCaseRepository;
     private final TestCaseMapper testCaseMapper;
+    private final ProblemRepository problemRepository;
 
     @Override
     public TestCaseDTO create(TestCaseCreateRequest createRequest) {
@@ -36,6 +39,16 @@ public class TestCaseServiceImpl implements TestCaseService {
                 .orElseThrow(() -> new ServiceException(ErrorCode.OBJECT_NOT_FOUND, "Can't find test case with id: " + id));
 
         return testCaseMapper.map(testCase);
+    }
+
+    @Override
+    public List<TestCaseDTO> getByProblemID(String problemID) {
+
+        var problem = problemRepository.findById(UUID.fromString(problemID))
+                        .orElseThrow(() -> new ServiceException(ErrorCode.OBJECT_NOT_FOUND, "Can't find problem with id: " + problemID));
+
+        List<TestCase> testCases = testCaseRepository.findAllByProblem(problem);
+        return testCaseMapper.map(testCases);
     }
 
     @Override

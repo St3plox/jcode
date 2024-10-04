@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class TestCaseController {
@@ -20,6 +22,13 @@ public class TestCaseController {
     public TestCaseDTO getTestCase(@PathVariable String id) {
 
         return testCaseService.get(id);
+    }
+
+    @GetMapping(Paths.TEST_CASE_GET_BY_PROBLEM)
+    @ResponseStatus(HttpStatus.OK)
+    public List<TestCaseDTO> getTestCaseByProblem(@PathVariable String id) {
+
+        return testCaseService.getByProblemID(id);
     }
 
     @PostMapping(Paths.TEST_CASE_POST)

@@ -21,6 +21,7 @@ public class Paths {
 
     public static final String TEST_CASE = ROOT + "/case";
     public static final String TEST_CASE_GET = TEST_CASE + "/" + ID;
+    public static final String TEST_CASE_GET_BY_PROBLEM = TEST_CASE + "/problem" + "/" + ID; //TODO: switch to params
     public static final String TEST_CASE_POST = TEST_CASE;
     public static final String TEST_CASE_PUT = TEST_CASE + "/" + ID;
     public static final String TEST_CASE_DELETE = TEST_CASE + "/" + ID;
