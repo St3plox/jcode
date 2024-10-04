@@ -8,6 +8,7 @@ import com.tveu.jcode.code_service.core.service.TestCaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,16 +20,16 @@ public class TestCaseController {
 
     @GetMapping(Paths.TEST_CASE_GET)
     @ResponseStatus(HttpStatus.OK)
-    public TestCaseDTO getTestCase(@PathVariable String id) {
+    public List<TestCaseDTO> getTestCase(@RequestParam(defaultValue = "") String id, @RequestParam(defaultValue = "") String problemID) {
 
-        return testCaseService.get(id);
-    }
+        if (!id.isEmpty()) {
+            return List.of(testCaseService.get(id));
+        }
+        if (!problemID.isEmpty()) {
+            return testCaseService.getByProblemID(problemID);
+        }
 
-    @GetMapping(Paths.TEST_CASE_GET_BY_PROBLEM)
-    @ResponseStatus(HttpStatus.OK)
-    public List<TestCaseDTO> getTestCaseByProblem(@PathVariable String id) {
-
-        return testCaseService.getByProblemID(id);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User must one of the params");
     }
 
     @PostMapping(Paths.TEST_CASE_POST)
