@@ -25,6 +25,7 @@ public class ProblemMapper {
         return ProblemDTO.builder()
                 .id(problem.getId())
                 .title(problem.getTitle())
+                .userId(problem.getUserId())
                 .description(problem.getDescription())
                 .createdAt(problem.getCreatedAt())
                 .updatedAt(problem.getUpdatedAt())
