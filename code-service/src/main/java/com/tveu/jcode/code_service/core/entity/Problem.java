@@ -52,5 +52,5 @@ public class Problem {
     private List<TestCase> testCases;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Submission> submissions;
+    private List<ProblemSubmission> submissions;
 }
