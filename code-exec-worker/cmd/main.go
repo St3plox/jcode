@@ -108,7 +108,7 @@ func run(log *zerolog.Logger) error {
 		log.Info().
 			Str("status", "service started").
 			Msg("startup")
-		serverErrors <- subController.ConcurrentListenForEvents(context.Background())
+		serverErrors <- subController.ListenForEvents(context.Background())
 	}()
 
 	// -------------------------------------------------------------------------

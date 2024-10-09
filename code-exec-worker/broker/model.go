@@ -35,6 +35,23 @@ type SubmissionDTO struct {
 	UpdatedAt        time.Time        `json:"updatedAt"`
 }
 
+type TestCaseDTO struct {
+	ID        string `json"id"`
+	ProblemID string `json"problemID"`
+	Input     string `json"input"`
+	Output    string `json"output"`
+}
+
+type ProblemSubmissionDTO struct {
+	SubmissionDTO
+	ProblemID string `json:"problemID"`
+}
+
+type ProblemSubmissionKafkaDTO struct {
+	SubmissionDTO ProblemSubmissionDTO `json:"submission_dto"`
+	TestCases     []TestCaseDTO        `json:"test_cases"`
+}
+
 type ResultDTO struct {
 	ID           string `json:"id"`
 	SubmissionID string `json:"submission_id"`

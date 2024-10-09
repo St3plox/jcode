@@ -2,6 +2,7 @@ package com.tveu.jcode.code_service.core.service;
 
 import com.tveu.jcode.code_service.api.dto.ProblemSubmissionCreateRequest;
 import com.tveu.jcode.code_service.api.dto.ProblemSubmissionDTO;
+import com.tveu.jcode.code_service.api.dto.ProblemSubmissionKafkaDTO;
 import com.tveu.jcode.code_service.core.entity.ProblemSubmission;
 import com.tveu.jcode.code_service.core.entity.SubmissionStatus;
 import com.tveu.jcode.code_service.core.exception.ErrorCode;
@@ -10,7 +11,9 @@ import com.tveu.jcode.code_service.core.kafka.KafkaProducer;
 import com.tveu.jcode.code_service.core.kafka.KafkaTopic;
 import com.tveu.jcode.code_service.core.mapper.ProblemSubmissionMapper;
 import com.tveu.jcode.code_service.core.mapper.SubmissionMapper;
+import com.tveu.jcode.code_service.core.mapper.TestCaseMapper;
 import com.tveu.jcode.code_service.core.repository.ProblemSubmissionRepository;
+import com.tveu.jcode.code_service.core.repository.TestCaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +24,11 @@ import java.util.UUID;
 public class ProblemSubmissionServiceImpl implements ProblemSubmissionService {
 
     private final ProblemSubmissionRepository problemSubmissionRepository;
+    private final TestCaseRepository testCaseRepository;
+    private final TestCaseMapper testCaseMapper;
+
     private final ProblemSubmissionMapper submissionMapper;
+
     private final KafkaProducer kafkaProducer;
 
     @Override
@@ -32,7 +39,15 @@ public class ProblemSubmissionServiceImpl implements ProblemSubmissionService {
         var savedProblemSubmission = problemSubmissionRepository.save(problemSubmission);
         var problemSubmissionDTO = submissionMapper.map(savedProblemSubmission);
 
-        kafkaProducer.sendMessage(problemSubmissionDTO, KafkaTopic.PROBLEM_SUBMISSION_TOPIC);
+        var testCases = testCaseRepository.findAllByProblem(problemSubmission.getProblem());
+
+        var dto = ProblemSubmissionKafkaDTO
+                .builder()
+                .submissionDTO(problemSubmissionDTO)
+                .testCases(testCaseMapper.map(testCases))
+                .build();
+
+        kafkaProducer.sendMessage(dto, KafkaTopic.PROBLEM_SUBMISSION_TOPIC);
 
         return problemSubmissionDTO;
     }
