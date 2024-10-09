@@ -29,7 +29,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         var submission = submissionRepository.save(submissionMapper.map(createRequest));
 
-        var submissionDTO =  submissionMapper.map(submission);
+        var submissionDTO = submissionMapper.map(submission);
         kafkaProducer.sendMessage(submissionDTO, KafkaTopic.SUBMISSION_TOPIC);
 
         return submissionDTO;
