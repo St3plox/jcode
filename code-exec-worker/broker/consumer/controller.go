@@ -12,59 +12,70 @@ import (
 	"github.com/rs/zerolog"
 )
 
-type Controller[T any] struct {
-	consumer Consumer[T]
-	producer producer.Producer
-	delay    time.Duration
-	log      *zerolog.Logger
-	shutdown chan os.Signal
-}
-
-func NewController[T any](consumer Consumer[T], producer producer.Producer, delay time.Duration, log *zerolog.Logger, shutdown chan os.Signal) *Controller[T] {
-	return &Controller[T]{
-		consumer: consumer,
-		producer: producer,
-		delay:    delay,
-		log:      log,
-		shutdown: shutdown,
-	}
+type Controller struct {
+	submissionConsumer        Consumer[broker.SubmissionDTO]
+	problemSubmissionConsumer Consumer[broker.ProblemSubmissionKafkaDTO]
+	producer                  producer.Producer
+	delay                     time.Duration
+	log                       *zerolog.Logger
+	shutdown                  chan os.Signal
 }
 
 // ListenForEvents listens to events from Kafka and processes each event concurrently
-func (c *Controller[T]) ListenForEvents(ctx context.Context) error {
-	eventChannel, err := c.consumer.Consume(ctx)
-	if err != nil {
-		c.log.Error().Err(err).Msg("Failed to start consuming events")
-		return err
-	}
+func (c *Controller) ListenForEvents(ctx context.Context) error {
 
 	var wg sync.WaitGroup
 
-	for event := range eventChannel {
-		wg.Add(1)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := c.listenForSubmissionEvents(ctx); err != nil {
+			c.log.Error().Err(err).Msg("Error processing submission events")
+		}
+	}()
 
-		go func(event T) {
-			defer wg.Done()
-
-			// Type switch to handle different event types
-			switch evt := any(event).(type) {
-			case broker.SubmissionDTO:
-				c.processSubmissionEvent(evt)
-			case broker.ProblemSubmissionKafkaDTO:
-				c.processProblemSubmissionEvent(evt)
-			default:
-				c.log.Error().Msg("Unknown event type, skipping...")
-			}
-
-		}(event)
-	}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := c.listenForProblemSubmissionEvents(ctx); err != nil {
+			c.log.Error().Err(err).Msg("Error processing problem submission events")
+		}
+	}()
 
 	wg.Wait()
 	return nil
 }
 
+func (c *Controller) listenForSubmissionEvents(ctx context.Context) error {
+
+	submissionEventChannel, err := c.submissionConsumer.Consume(ctx)
+	if err != nil {
+		c.log.Error().Err(err).Msg("Failed to start consuming submission events")
+		return err
+	}
+
+	for subEvent := range submissionEventChannel {
+		c.processSubmissionEvent(subEvent)
+	}
+	return nil
+}
+
+func (c *Controller) listenForProblemSubmissionEvents(ctx context.Context) error {
+
+	problemEventChannel, err := c.problemSubmissionConsumer.Consume(ctx)
+	if err != nil {
+		c.log.Error().Err(err).Msg("Failed to start consuming problem submission events")
+		return err
+	}
+
+	for probEvent := range problemEventChannel {
+		c.processProblemSubmissionEvent(probEvent)
+	}
+	return nil
+}
+
 // processSubmissionEvent processes the SubmissionDTO type event
-func (c *Controller[T]) processSubmissionEvent(subEvent broker.SubmissionDTO) {
+func (c *Controller) processSubmissionEvent(subEvent broker.SubmissionDTO) {
 	c.log.Info().Msg("Started processing SubmissionDTO event")
 
 	events := make([]any, 1)
@@ -91,35 +102,35 @@ func (c *Controller[T]) processSubmissionEvent(subEvent broker.SubmissionDTO) {
 }
 
 // processProblemSubmissionEvent processes the ProblemSubmissionKafkaDTO event
-func (c *Controller[T]) processProblemSubmissionEvent(problemEvent broker.ProblemSubmissionKafkaDTO) {
+func (c *Controller) processProblemSubmissionEvent(problemEvent broker.ProblemSubmissionKafkaDTO) {
 	c.log.Info().Msg("Started processing ProblemSubmissionKafkaDTO event")
 
 	// Process submission part of the event
-	c.processSubmissionEvent(problemEvent.SubmissionDTO)
+	// c.processSubmissionEvent(problemEvent.SubmissionDTO)
 
-	// Process each test case
-	for _, testCase := range problemEvent.TestCases {
-		c.processTestCase(testCase, problemEvent.SubmissionDTO)
-	}
+	// // Process each test case
+	// for _, testCase := range problemEvent.TestCases {
+	// 	c.processTestCase(testCase, problemEvent.SubmissionDTO)
+	// }
 }
 
 // processTestCase handles the execution of test cases
-func (c *Controller[T]) processTestCase(testCase broker.TestCaseDTO, subEvent broker.SubmissionDTO) {
-	c.log.Info().Msg("Processing test case: " + testCase.ID.String())
+func (c *Controller) processTestCase(testCase broker.TestCaseDTO, subEvent broker.SubmissionDTO) {
+	c.log.Info().Msg("Processing test case: " + testCase.ID)
 
-	exec, err := codeexec.NewDockerExecutor(subEvent.Language)
-	if err != nil {
-		c.log.Error().Err(err).Msg("Failed to create code executor for test case")
-		return
-	}
+	// exec, err := codeexec.NewDockerExecutor(subEvent.Language)
+	// if err != nil {
+	// 	c.log.Error().Err(err).Msg("Failed to create code executor for test case")
+	// 	return
+	// }
 
-	// Execute the test case using the test input
-	output, err := exec.ExecuteTest(subEvent.Code, testCase.Input)
-	if err != nil {
-		c.log.Error().Err(err).Msg("Test case execution failed")
-		return
-	}
+	// // Execute the test case using the test input
+	// // output, err := exec.ExecuteTest(subEvent.Code, testCase.Input)
+	// // if err != nil {
+	// // 	c.log.Error().Err(err).Msg("Test case execution failed")
+	// // 	return
+	// // }
 
 	// Log the result of the test case
-	c.log.Info().Msg("Test case " + testCase.ID.String() + " output: " + output)
+	// c.log.Info().Msg("Test case " + testCase.ID.String() + " output: " + output)
 }
