@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/St3pegor/jcode/broker"
 	"github.com/St3pegor/jcode/broker/consumer"
 	"github.com/St3pegor/jcode/broker/producer"
 	"github.com/St3plox/Blogchain/foundation/logger"
@@ -88,7 +89,7 @@ func run(log *zerolog.Logger) error {
 	}
 
 	//TODO: remove to cfg
-	subConsumer, err := consumer.NewSubmissionConsumer(
+	subConsumer, err := consumer.NewConsumer[broker.SubmissionDTO](
 		"localhost:9092",
 		"jcode-group",
 		"submissions",
@@ -96,19 +97,41 @@ func run(log *zerolog.Logger) error {
 		runtime.GOMAXPROCS(0),
 		time.Microsecond*10,
 	)
+
+	probSubConsuner, err := consumer.NewConsumer[broker.ProblemSubmissionKafkaDTO](
+		"localhost:9092",
+		"jcode-group",
+		"submissions",
+		log,
+		runtime.GOMAXPROCS(0),
+		time.Microsecond*10,
+	)
+
+
 	if err != nil {
 		return err
 	}
 
 	shutdown := make(chan os.Signal, 1)
-	subController := consumer.New(subConsumer, resultProducer, time.Second, log, shutdown)
+
+	controller, err := consumer.NewControllerBuilder().
+		WithDelay(time.Second).
+		WithLogger(log).
+		WithProblemSubmissionConsumer(probSubConsuner).
+		WithShutdown(shutdown).
+		WithSubmissionConsumer(subConsumer).
+		WithProducer(resultProducer).Build()
+	
+	if err != nil {
+		return  err
+	}
 
 	serverErrors := make(chan error, 1)
 	go func() {
 		log.Info().
 			Str("status", "service started").
 			Msg("startup")
-		serverErrors <- subController.ListenForEvents(context.Background())
+		serverErrors <- controller.ListenForEvents(context.Background())
 	}()
 
 	// -------------------------------------------------------------------------
@@ -131,6 +154,4 @@ func run(log *zerolog.Logger) error {
 		return fmt.Errorf("Shutdown")
 
 	}
-
-	// return nil
 }

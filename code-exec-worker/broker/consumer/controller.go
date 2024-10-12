@@ -9,6 +9,7 @@ import (
 	"github.com/St3pegor/jcode/broker"
 	"github.com/St3pegor/jcode/broker/producer"
 	"github.com/St3pegor/jcode/codeexec"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 )
 
@@ -76,6 +77,7 @@ func (c *Controller) listenForProblemSubmissionEvents(ctx context.Context) error
 
 // processSubmissionEvent processes the SubmissionDTO type event
 func (c *Controller) processSubmissionEvent(subEvent broker.SubmissionDTO) {
+
 	c.log.Info().Msg("Started processing SubmissionDTO event")
 
 	events := make([]any, 1)
@@ -103,34 +105,34 @@ func (c *Controller) processSubmissionEvent(subEvent broker.SubmissionDTO) {
 
 // processProblemSubmissionEvent processes the ProblemSubmissionKafkaDTO event
 func (c *Controller) processProblemSubmissionEvent(problemEvent broker.ProblemSubmissionKafkaDTO) {
+
 	c.log.Info().Msg("Started processing ProblemSubmissionKafkaDTO event")
 
-	// Process submission part of the event
-	// c.processSubmissionEvent(problemEvent.SubmissionDTO)
+	events := make([]any, 1)
 
-	// // Process each test case
-	// for _, testCase := range problemEvent.TestCases {
-	// 	c.processTestCase(testCase, problemEvent.SubmissionDTO)
-	// }
-}
+	exec, err := codeexec.NewDockerExecutor(problemEvent.SubmissionDTO.Language)
+	if err != nil {
+		c.log.Error().Err(err).Msg("Failed to execute code")
+		//TODO: add error response
+		return
+	}
 
-// processTestCase handles the execution of test cases
-func (c *Controller) processTestCase(testCase broker.TestCaseDTO, subEvent broker.SubmissionDTO) {
-	c.log.Info().Msg("Processing test case: " + testCase.ID)
+	err = exec.RunTestCases(problemEvent.SubmissionDTO.Code, problemEvent.TestCases)
+	if err != nil {
+		c.log.Error().Err(err).Msg("Failed to execute code")
+		//TODO: add error response
+		return
+	}
 
-	// exec, err := codeexec.NewDockerExecutor(subEvent.Language)
-	// if err != nil {
-	// 	c.log.Error().Err(err).Msg("Failed to create code executor for test case")
-	// 	return
-	// }
+	result := broker.ResultDTO{
+		ID:           uuid.NewString(),
+		SubmissionID: problemEvent.SubmissionDTO.ID.String(),
+		Output:       "Test passed",
+		Errors:       "",
+	}
 
-	// // Execute the test case using the test input
-	// // output, err := exec.ExecuteTest(subEvent.Code, testCase.Input)
-	// // if err != nil {
-	// // 	c.log.Error().Err(err).Msg("Test case execution failed")
-	// // 	return
-	// // }
+	events = append(events, result)
+	c.producer.ProduceEvents(events)
+	c.log.Info().Msg(" processed \n output: ")
 
-	// Log the result of the test case
-	// c.log.Info().Msg("Test case " + testCase.ID.String() + " output: " + output)
 }
