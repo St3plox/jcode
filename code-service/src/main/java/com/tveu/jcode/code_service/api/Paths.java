@@ -19,6 +19,9 @@ public class Paths {
     public static final String PROBLEM_POST = PROBLEM;
     public static final String PROBLEM_DELETE = PROBLEM + "/" + ID;
 
+    public static final String PROBLEM_SUBMISSION = PROBLEM + SUBMISSION;
+    public static final String PROBLEM_SUBMISSION_POST = PROBLEM_SUBMISSION;
+
     public static final String TEST_CASE = ROOT + "/case";
     public static final String TEST_CASE_GET = TEST_CASE;
     public static final String TEST_CASE_POST = TEST_CASE;

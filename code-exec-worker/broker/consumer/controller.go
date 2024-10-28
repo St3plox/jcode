@@ -63,6 +63,7 @@ func (c *Controller) listenForSubmissionEvents(ctx context.Context) error {
 
 func (c *Controller) listenForProblemSubmissionEvents(ctx context.Context) error {
 
+
 	problemEventChannel, err := c.problemSubmissionConsumer.Consume(ctx)
 	if err != nil {
 		c.log.Error().Err(err).Msg("Failed to start consuming problem submission events")

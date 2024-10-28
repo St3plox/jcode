@@ -97,17 +97,19 @@ func run(log *zerolog.Logger) error {
 		runtime.GOMAXPROCS(0),
 		time.Microsecond*10,
 	)
+	if err != nil {
+		return err
+	}
+
 
 	probSubConsuner, err := consumer.NewConsumer[broker.ProblemSubmissionKafkaDTO](
 		"localhost:9092",
 		"jcode-group",
-		"submissions",
+		"problem_submissions",
 		log,
 		runtime.GOMAXPROCS(0),
 		time.Microsecond*10,
 	)
-
-
 	if err != nil {
 		return err
 	}
@@ -118,12 +120,13 @@ func run(log *zerolog.Logger) error {
 		WithDelay(time.Second).
 		WithLogger(log).
 		WithProblemSubmissionConsumer(probSubConsuner).
-		WithShutdown(shutdown).
 		WithSubmissionConsumer(subConsumer).
-		WithProducer(resultProducer).Build()
-	
+		WithShutdown(shutdown).
+		WithProducer(resultProducer).
+		Build()
+
 	if err != nil {
-		return  err
+		return err
 	}
 
 	serverErrors := make(chan error, 1)

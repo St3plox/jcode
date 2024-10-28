@@ -3,6 +3,7 @@ package consumer
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"sync"
 	"time"
 
@@ -28,6 +29,9 @@ func NewConsumer[T any](adrr, groupID, topic string, log *zerolog.Logger, buffer
 		return nil, err
 	}
 
+
+	fmt.Println(consumer)
+
 	return &Consumer[T]{
 		consumer:      consumer,
 		topic:         topic,
@@ -38,6 +42,9 @@ func NewConsumer[T any](adrr, groupID, topic string, log *zerolog.Logger, buffer
 }
 
 func (c *Consumer[T]) Consume(ctx context.Context) (<-chan T, error) {
+
+	fmt.Println(c.consumer)
+
 	if err := c.consumer.SubscribeTopics([]string{c.topic}, nil); err != nil {
 		return nil, err
 	}

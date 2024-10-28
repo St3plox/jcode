@@ -81,7 +81,7 @@ func (b *ControllerBuilder) Build() (*Controller, error) {
 
 	return &Controller{
 		submissionConsumer:        *b.submissionConsumer,
-		// problemSubmissionConsumer: *b.problemSubmissionConsumer,
+		problemSubmissionConsumer: *b.problemSubmissionConsumer,
 		producer:                  *b.producer,
 		delay:                     *b.delay,
 		log:                       b.log,
