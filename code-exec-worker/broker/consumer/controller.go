@@ -86,7 +86,7 @@ func (c *Controller) processSubmissionEvent(subEvent broker.SubmissionDTO) {
 	if err != nil {
 		events = append(events, broker.MapTo(subEvent, "", err.Error()))
 		c.log.Error().Err(err).Msg("Failed to create code executor")
-		c.producer.ProduceEvents(events)
+		c.producer.ProduceEvents("result", events)
 		return
 	}
 
@@ -94,12 +94,12 @@ func (c *Controller) processSubmissionEvent(subEvent broker.SubmissionDTO) {
 	if err != nil {
 		events = append(events, broker.MapTo(subEvent, output, err.Error()))
 		c.log.Error().Err(err).Msg("Failed to execute code")
-		c.producer.ProduceEvents(events)
+		c.producer.ProduceEvents("result", events)
 		return
 	}
 
 	events = append(events, broker.MapTo(subEvent, output, ""))
-	c.producer.ProduceEvents(events)
+	c.producer.ProduceEvents("result", events)
 	c.log.Info().Msg(subEvent.ID.String() + " processed \n output: " + output)
 }
 
@@ -145,7 +145,7 @@ func (c *Controller) processProblemSubmissionEvent(problemEvent broker.ProblemSu
 	}
 
 	events = append(events, dto)
-	c.producer.ProduceEvents(events)
-	c.log.Info().Msg(" processed \n output: ")
+	c.producer.ProduceEvents("problem", events)
+	c.log.Info().Msg(problemEvent.SubmissionDTO.ID.String() + " processed \n output: ")
 
 }

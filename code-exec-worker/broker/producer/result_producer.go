@@ -6,8 +6,6 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
-var topic = "problem"
-
 type ResultProducer struct {
 	producer *kafka.Producer
 }
@@ -16,7 +14,7 @@ func NewResultProducer(producer *kafka.Producer) *ResultProducer {
 	return &ResultProducer{producer}
 }
 
-func (lp *ResultProducer) ProduceEvents(events []any) error {
+func (lp *ResultProducer) ProduceEvents(topic string,events []any) error {
 	for _, event := range events {
 
 		encodedEvent, err := json.Marshal(event)
