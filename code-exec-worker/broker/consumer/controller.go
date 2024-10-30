@@ -63,7 +63,6 @@ func (c *Controller) listenForSubmissionEvents(ctx context.Context) error {
 
 func (c *Controller) listenForProblemSubmissionEvents(ctx context.Context) error {
 
-
 	problemEventChannel, err := c.problemSubmissionConsumer.Consume(ctx)
 	if err != nil {
 		c.log.Error().Err(err).Msg("Failed to start consuming problem submission events")
@@ -132,7 +131,20 @@ func (c *Controller) processProblemSubmissionEvent(problemEvent broker.ProblemSu
 		Errors:       "",
 	}
 
-	events = append(events, result)
+	dto := broker.ProblemResultDTO{
+		ResultDTO: result,
+		TestResults: []broker.TestResultDTO{
+			{
+				ID:           uuid.NewString(),
+				TestCaseID:   problemEvent.TestCases[0].ID,
+				IsSuccessful: true,
+				Output:       problemEvent.TestCases[0].Output,
+				CreatedAt:    "",
+			},
+		},
+	}
+
+	events = append(events, dto)
 	c.producer.ProduceEvents(events)
 	c.log.Info().Msg(" processed \n output: ")
 

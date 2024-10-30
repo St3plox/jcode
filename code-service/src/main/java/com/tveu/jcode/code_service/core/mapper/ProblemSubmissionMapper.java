@@ -1,14 +1,9 @@
 package com.tveu.jcode.code_service.core.mapper;
 
-import com.tveu.jcode.code_service.api.dto.ProblemCreateRequest;
-import com.tveu.jcode.code_service.api.dto.ProblemDTO;
 import com.tveu.jcode.code_service.api.dto.ProblemSubmissionCreateRequest;
 import com.tveu.jcode.code_service.api.dto.ProblemSubmissionDTO;
-import com.tveu.jcode.code_service.api.dto.SubmissionCreateRequest;
-import com.tveu.jcode.code_service.api.dto.SubmissionDTO;
-import com.tveu.jcode.code_service.core.entity.Problem;
+import com.tveu.jcode.code_service.core.entity.Language;
 import com.tveu.jcode.code_service.core.entity.ProblemSubmission;
-import com.tveu.jcode.code_service.core.entity.Submission;
 import com.tveu.jcode.code_service.core.entity.SubmissionStatus;
 import com.tveu.jcode.code_service.core.exception.ErrorCode;
 import com.tveu.jcode.code_service.core.exception.ServiceException;
@@ -33,7 +28,7 @@ public class ProblemSubmissionMapper {
                 .id(UUID.randomUUID())
                 .userID(createRequest.userID())
                 .problem(problem)
-                .language(createRequest.language())
+                .language(Language.valueOf(createRequest.language()))
                 .submissionStatus(SubmissionStatus.PENDING)
                 .code(createRequest.code())
                 .build();

@@ -1,6 +1,6 @@
 package com.tveu.jcode.code_service.api;
 
-public class Paths {
+public class Path {
 
     public static final String VERSION = "/v1";
     public static final String ROOT = VERSION + "/code";
@@ -19,7 +19,7 @@ public class Paths {
     public static final String PROBLEM_POST = PROBLEM;
     public static final String PROBLEM_DELETE = PROBLEM + "/" + ID;
 
-    public static final String PROBLEM_SUBMISSION = PROBLEM + SUBMISSION;
+    public static final String PROBLEM_SUBMISSION = ROOT + "/problem-submission";
     public static final String PROBLEM_SUBMISSION_POST = PROBLEM_SUBMISSION;
 
     public static final String TEST_CASE = ROOT + "/case";

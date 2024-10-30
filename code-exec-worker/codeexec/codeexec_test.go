@@ -57,7 +57,7 @@ print(f'Hello, {input_data}')
 
 // TestRunTestCases_Failure tests the RunTestCases function with an expected failure.
 func TestRunTestCases_Failure(t *testing.T) {
-	// Initialize the DockerExecutor for Python.
+ // Initialize the DockerExecutor for Python.
 	executor, err := codeexec.NewDockerExecutor(broker.PYTHON)
 	assert.NoError(t, err)
 

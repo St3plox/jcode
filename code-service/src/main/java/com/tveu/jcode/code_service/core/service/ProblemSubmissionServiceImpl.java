@@ -10,17 +10,18 @@ import com.tveu.jcode.code_service.core.exception.ServiceException;
 import com.tveu.jcode.code_service.core.kafka.KafkaProducer;
 import com.tveu.jcode.code_service.core.kafka.KafkaTopic;
 import com.tveu.jcode.code_service.core.mapper.ProblemSubmissionMapper;
-import com.tveu.jcode.code_service.core.mapper.SubmissionMapper;
 import com.tveu.jcode.code_service.core.mapper.TestCaseMapper;
 import com.tveu.jcode.code_service.core.repository.ProblemSubmissionRepository;
 import com.tveu.jcode.code_service.core.repository.TestCaseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProblemSubmissionServiceImpl implements ProblemSubmissionService {
 
     private final ProblemSubmissionRepository problemSubmissionRepository;
@@ -34,8 +35,8 @@ public class ProblemSubmissionServiceImpl implements ProblemSubmissionService {
     @Override
     public ProblemSubmissionDTO submit(ProblemSubmissionCreateRequest createRequest) {
 
-
         ProblemSubmission problemSubmission = submissionMapper.map(createRequest);
+
         var savedProblemSubmission = problemSubmissionRepository.save(problemSubmission);
         var problemSubmissionDTO = submissionMapper.map(savedProblemSubmission);
 
@@ -47,7 +48,7 @@ public class ProblemSubmissionServiceImpl implements ProblemSubmissionService {
                 .testCases(testCaseMapper.map(testCases))
                 .build();
 
-        kafkaProducer.sendMessage(dto, KafkaTopic.PROBLEM_SUBMISSION_TOPIC);
+        kafkaProducer.sendMessage(dto, KafkaTopic.PROBLEM_SUBMISSION);
 
         return problemSubmissionDTO;
     }

@@ -1,6 +1,6 @@
 package com.tveu.jcode.code_service.api.controller;
 
-import com.tveu.jcode.code_service.api.Paths;
+import com.tveu.jcode.code_service.api.Path;
 import com.tveu.jcode.code_service.api.dto.ProblemCreateRequest;
 import com.tveu.jcode.code_service.api.dto.ProblemDTO;
 import com.tveu.jcode.code_service.api.dto.ProblemUpdateRequest;
@@ -15,28 +15,28 @@ public class ProblemController {
 
     private final ProblemService problemService;
 
-    @GetMapping(Paths.PROBLEM_GET)
+    @GetMapping(Path.PROBLEM_GET)
     @ResponseStatus(HttpStatus.OK)
     public ProblemDTO getProblem(@PathVariable String id) {
 
         return problemService.get(id);
     }
 
-    @PostMapping(Paths.PROBLEM_POST)
+    @PostMapping(Path.PROBLEM_POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ProblemDTO createProblem(@RequestBody ProblemCreateRequest createRequest) {
 
         return problemService.create(createRequest);
     }
 
-    @PutMapping(Paths.PROBLEM_PUT)
+    @PutMapping(Path.PROBLEM_PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ProblemDTO updateProblem(@PathVariable String id, @RequestBody ProblemUpdateRequest updateRequest) {
 
         return problemService.update(id, updateRequest);
     }
 
-    @DeleteMapping(Paths.PROBLEM_DELETE)
+    @DeleteMapping(Path.PROBLEM_DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProblem(@PathVariable String id) {
 

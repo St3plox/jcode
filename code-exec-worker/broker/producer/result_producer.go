@@ -6,7 +6,7 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
-var topic = "result"
+var topic = "problem"
 
 type ResultProducer struct {
 	producer *kafka.Producer

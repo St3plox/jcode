@@ -59,6 +59,19 @@ type ResultDTO struct {
 	Errors       string `json:"errors"`
 }
 
+type TestResultDTO struct {
+	ID           string `json:"id"`
+	TestCaseID   string `json:"test_case_id"`
+	IsSuccessful bool   `json:"is_successful"`
+	Output       string `json:"output"`
+	CreatedAt    string `json:"created_at"`
+}
+
+type ProblemResultDTO struct {
+	ResultDTO   ResultDTO       `json:"result_dto"`
+	TestResults []TestResultDTO `json:"test_case_results"`
+}
+
 func MapTo(subEvent SubmissionDTO, output string, errors string) ResultDTO {
 
 	return ResultDTO{

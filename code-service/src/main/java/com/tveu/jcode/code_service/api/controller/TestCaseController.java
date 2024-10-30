@@ -1,6 +1,6 @@
 package com.tveu.jcode.code_service.api.controller;
 
-import com.tveu.jcode.code_service.api.Paths;
+import com.tveu.jcode.code_service.api.Path;
 import com.tveu.jcode.code_service.api.dto.TestCaseCreateRequest;
 import com.tveu.jcode.code_service.api.dto.TestCaseDTO;
 import com.tveu.jcode.code_service.api.dto.TestCaseUpdateRequest;
@@ -18,7 +18,7 @@ public class TestCaseController {
 
     private final TestCaseService testCaseService;
 
-    @GetMapping(Paths.TEST_CASE_GET)
+    @GetMapping(Path.TEST_CASE_GET)
     @ResponseStatus(HttpStatus.OK)
     public List<TestCaseDTO> getTestCase(@RequestParam(defaultValue = "") String id, @RequestParam(defaultValue = "") String problemID) {
 
@@ -32,21 +32,21 @@ public class TestCaseController {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User must one of the params");
     }
 
-    @PostMapping(Paths.TEST_CASE_POST)
+    @PostMapping(Path.TEST_CASE_POST)
     @ResponseStatus(HttpStatus.CREATED)
     public TestCaseDTO createTestCase(@RequestBody TestCaseCreateRequest createRequest) {
 
         return testCaseService.create(createRequest);
     }
 
-    @PutMapping(Paths.TEST_CASE_PUT)
+    @PutMapping(Path.TEST_CASE_PUT)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TestCaseDTO updateTestCase(@PathVariable String id, @RequestBody TestCaseUpdateRequest updateRequest) {
 
         return testCaseService.update(id, updateRequest);
     }
 
-    @DeleteMapping(Paths.TEST_CASE_DELETE)
+    @DeleteMapping(Path.TEST_CASE_DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTestCase(@PathVariable String id) {
         testCaseService.delete(id);
