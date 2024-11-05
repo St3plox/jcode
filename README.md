@@ -122,7 +122,7 @@ At current state of the project you need to be able to launch gradle and go proj
 - [ ] Documentation
 - [ ] Auth
 - [ ] Testing 
-- [ ] More functionality (Tasks)
+- [X] More functionality (Tasks)
 
 See the [open issues](https://github.com/St3plox/jcode/issues) for a full list of proposed features (and known issues).
 
