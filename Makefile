@@ -5,9 +5,9 @@ launch-postgres:
 flyway-migrate:
 	flyway -url=jdbc:postgresql://localhost:5432/code \
        -user=postgres -password=postgres \
-       -locations=filesystem:$(PWD)code-service/src/main/resources/db.migration -outOfOrder=true migrate
+       -locations=filesystem:$(PWD)/code-service/src/main/resources/db.migration -outOfOrder=true migrate
 
 flyway-repair:
 	flyway -url=jdbc:postgresql://localhost:5432/code \
        -user=postgres -password=postgres \
-       -locations=filesystem:$(PWD)code-service/src/main/resources/db.migration -outOfOrder=true repair
+       -locations=filesystem:$(PWD)/code-service/src/main/resources/db.migration -outOfOrder=true repair

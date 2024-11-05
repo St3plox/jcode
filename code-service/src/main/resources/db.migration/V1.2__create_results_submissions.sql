@@ -1,25 +1,31 @@
--- Create table for 'Submission' entity
+-- Migration script for Submission and Result tables
+
+-- Create the 'submissions' table
 CREATE TABLE submissions
 (
-    id                UUID        NOT NULL PRIMARY KEY,
+    id                UUID PRIMARY KEY,
     user_id           BIGINT      NOT NULL,
-    code              TEXT,
-    language          VARCHAR(20) NOT NULL,
-    submission_status VARCHAR(20) NOT NULL,
-    created_at        TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at        TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+    code              TEXT        NOT NULL,
+    language          VARCHAR(50) NOT NULL,
+    submission_status VARCHAR(50) NOT NULL,
+    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create table for 'Result' entity
+-- Create the 'results' table
 CREATE TABLE results
 (
-    id            UUID      NOT NULL PRIMARY KEY,
-    submission_id UUID      NOT NULL,
+    id            UUID PRIMARY KEY,
+    submission_id UUID NOT NULL,
     output        TEXT,
     errors        TEXT,
-    created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_submission FOREIGN KEY (submission_id) REFERENCES submissions (id) ON DELETE CASCADE
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_submission
+        FOREIGN KEY (submission_id)
+            REFERENCES submissions (id)
+            ON DELETE CASCADE
 );
 
+-- Indexes for faster lookup (optional)
 CREATE INDEX idx_submission_user ON submissions (user_id);
 CREATE INDEX idx_result_submission ON results (submission_id);

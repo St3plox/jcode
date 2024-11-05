@@ -13,7 +13,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tveu.jcode.code_service.api.dto.SubmissionDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,10 +27,11 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
-
+        // Kafka Producer Configuration
         Map<String, Object> configProps = new HashMap<>();
-        log.info(bootstrapServers);
+        log.info("Bootstrap servers: {}", bootstrapServers);
 
+        // Set producer properties
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -43,10 +43,8 @@ public class KafkaProducerConfig {
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
-
-    public void sendSubmission(String topic, SubmissionDTO submissionDTO) throws Exception {
-        // Serialize SubmissionDTO into JSON string
-        String jsonSubmission = objectMapper.writeValueAsString(submissionDTO);
+    public void sendSubmission(String topic, Object dto) throws Exception {
+        String jsonSubmission = objectMapper.writeValueAsString(dto);
         kafkaTemplate().send(topic, jsonSubmission);
     }
 }

@@ -7,8 +7,10 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/St3pegor/jcode/broker"
 	"github.com/St3pegor/jcode/broker/consumer"
 	"github.com/St3pegor/jcode/broker/producer"
+	"github.com/St3pegor/jcode/service"
 	"github.com/St3plox/Blogchain/foundation/logger"
 	"github.com/ardanlabs/conf/v3"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
@@ -88,7 +90,7 @@ func run(log *zerolog.Logger) error {
 	}
 
 	//TODO: remove to cfg
-	subConsumer, err := consumer.NewSubmissionConsumer(
+	subConsumer, err := consumer.NewConsumer[broker.SubmissionDTO](
 		"localhost:9092",
 		"jcode-group",
 		"submissions",
@@ -100,15 +102,41 @@ func run(log *zerolog.Logger) error {
 		return err
 	}
 
+	probSubConsuner, err := consumer.NewConsumer[broker.ProblemSubmissionKafkaDTO](
+		"localhost:9092",
+		"jcode-group",
+		"problem_submissions",
+		log,
+		runtime.GOMAXPROCS(0),
+		time.Microsecond*10,
+	)
+	if err != nil {
+		return err
+	}
+
 	shutdown := make(chan os.Signal, 1)
-	subController := consumer.New(subConsumer, resultProducer, time.Second, log, shutdown)
+
+	submissionProcessor := service.NewSubmissionProcessor(resultProducer, log)
+	problemProcessor := service.NewProblemSubmissionProcessor(resultProducer, log)
+
+	controller, err := consumer.NewControllerBuilder().
+		WithLogger(log).
+		WithSubmissionConsumer(subConsumer).
+		WithProblemSubmissionConsumer(probSubConsuner).
+		WithSubmissionProcessor(submissionProcessor).
+		WithProblemProcessor(problemProcessor).
+		WithShutdown(shutdown).
+		Build()
+	if err != nil {
+		return err
+	}
 
 	serverErrors := make(chan error, 1)
 	go func() {
 		log.Info().
 			Str("status", "service started").
 			Msg("startup")
-		serverErrors <- subController.ConcurrentListenForEvents(context.Background())
+		serverErrors <- controller.ListenForEvents(context.Background())
 	}()
 
 	// -------------------------------------------------------------------------
@@ -131,6 +159,4 @@ func run(log *zerolog.Logger) error {
 		return fmt.Errorf("Shutdown")
 
 	}
-
-	// return nil
 }

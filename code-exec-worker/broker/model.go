@@ -35,11 +35,41 @@ type SubmissionDTO struct {
 	UpdatedAt        time.Time        `json:"updatedAt"`
 }
 
+type TestCaseDTO struct {
+	ID        string `json:"id"`
+	ProblemID string `json:"problemID"`
+	Input     string `json:"input"`
+	Output    string `json:"output"`
+}
+
+type ProblemSubmissionDTO struct {
+	SubmissionDTO
+	ProblemID string `json:"problemID"`
+}
+
+type ProblemSubmissionKafkaDTO struct {
+	SubmissionDTO ProblemSubmissionDTO `json:"submission_dto"`
+	TestCases     []TestCaseDTO        `json:"test_cases"`
+}
+
 type ResultDTO struct {
 	ID           string `json:"id"`
 	SubmissionID string `json:"submission_id"`
 	Output       string `json:"output"`
 	Errors       string `json:"errors"`
+}
+
+type TestResultDTO struct {
+	ID           string `json:"id"`
+	TestCaseID   string `json:"test_case_id"`
+	IsSuccessful bool   `json:"is_successful"`
+	Output       string `json:"output"`
+	CreatedAt    string `json:"created_at"`
+}
+
+type ProblemResultDTO struct {
+	ResultDTO   ResultDTO       `json:"result_dto"`
+	TestResults []TestResultDTO `json:"test_case_results"`
 }
 
 func MapTo(subEvent SubmissionDTO, output string, errors string) ResultDTO {

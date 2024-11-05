@@ -8,11 +8,19 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopic {
 
-    public static final String SUBMISSION_TOPIC = "submissions";
+    public static final String SUBMISSION = "submissions";
+
+    public static final String PROBLEM_SUBMISSION = "problem_submissions";
+
+    public static final String PROBLEM_RESULT = "problem";
 
     @Bean
     public NewTopic submissionsTopic() {
-        return TopicBuilder.name(SUBMISSION_TOPIC).build();
+        return TopicBuilder.name(SUBMISSION).build();
     }
 
+    @Bean
+    public NewTopic problemSubmissionsTopic() {
+        return TopicBuilder.name(PROBLEM_SUBMISSION).build();
+    }
 }
