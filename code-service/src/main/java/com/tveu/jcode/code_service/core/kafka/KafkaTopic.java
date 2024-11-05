@@ -8,10 +8,8 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopic {
 
-    // Topic for general submissions
     public static final String SUBMISSION = "submissions";
 
-    // Topic for problem-specific submissions
     public static final String PROBLEM_SUBMISSION = "problem_submissions";
 
     public static final String PROBLEM_RESULT = "problem";
