@@ -20,7 +20,7 @@ public class TestCaseController {
 
     @GetMapping(Path.TEST_CASE_GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<TestCaseDTO> getTestCase(@RequestParam(defaultValue = "") String id, @RequestParam(defaultValue = "") String problemID) {
+                                public List<TestCaseDTO> getTestCase(@RequestParam(defaultValue = "") String id, @RequestParam(defaultValue = "") String problemID) {
 
         if (!id.isEmpty()) {
             return List.of(testCaseService.get(id));

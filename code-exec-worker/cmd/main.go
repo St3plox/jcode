@@ -10,6 +10,7 @@ import (
 	"github.com/St3pegor/jcode/broker"
 	"github.com/St3pegor/jcode/broker/consumer"
 	"github.com/St3pegor/jcode/broker/producer"
+	"github.com/St3pegor/jcode/service"
 	"github.com/St3plox/Blogchain/foundation/logger"
 	"github.com/ardanlabs/conf/v3"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
@@ -101,7 +102,6 @@ func run(log *zerolog.Logger) error {
 		return err
 	}
 
-
 	probSubConsuner, err := consumer.NewConsumer[broker.ProblemSubmissionKafkaDTO](
 		"localhost:9092",
 		"jcode-group",
@@ -116,15 +116,17 @@ func run(log *zerolog.Logger) error {
 
 	shutdown := make(chan os.Signal, 1)
 
-	controller, err := consumer.NewControllerBuilder().
-		WithDelay(time.Second).
-		WithLogger(log).
-		WithProblemSubmissionConsumer(probSubConsuner).
-		WithSubmissionConsumer(subConsumer).
-		WithShutdown(shutdown).
-		WithProducer(resultProducer).
-		Build()
+	submissionProcessor := service.NewSubmissionProcessor(resultProducer, log)
+	problemProcessor := service.NewProblemSubmissionProcessor(resultProducer, log)
 
+	controller, err := consumer.NewControllerBuilder().
+		WithLogger(log).
+		WithSubmissionConsumer(subConsumer).
+		WithProblemSubmissionConsumer(probSubConsuner).
+		WithSubmissionProcessor(submissionProcessor).
+		WithProblemProcessor(problemProcessor).
+		WithShutdown(shutdown).
+		Build()
 	if err != nil {
 		return err
 	}

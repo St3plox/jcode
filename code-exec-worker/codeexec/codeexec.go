@@ -88,84 +88,74 @@ func (de *DockerExecutor) Execute(code string) (string, error) {
 // The command used for execution is determined by the language.
 // 'inputs' is a slice of inputs passed to the code, and it returns the actual output.
 func (de *DockerExecutor) ExecuteWithInputs(code string, input string) (string, error) {
-    log.Println("Starting execution with inputs")
 
-    img, err := dockerImage(de.lang)
-    if err != nil {
-        return "", fmt.Errorf("failed to parse language: %w", err)
-    }
+	img, err := dockerImage(de.lang)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse language: %w", err)
+	}
 
-    log.Printf("Pulling image %s if necessary...", img)
-    if err := de.pullImage(img); err != nil {  // Make sure this line is properly closed
-        return "", fmt.Errorf("failed to pull Docker image: %w", err)
-    }
+	if err := de.pullImage(img); err != nil {
+		return "", fmt.Errorf("failed to pull Docker image: %w", err)
+	}
 
-    cmd, err := genCmd(code, de.lang)
-    if err != nil {
-        return "", fmt.Errorf("failed to generate command: %w", err)
-    }
+	cmd, err := genCmd(code, de.lang)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate command: %w", err)
+	}
 
-    // Create container with stdin open
-    container, err := de.client.CreateContainer(docker.CreateContainerOptions{
-        Config: &docker.Config{
-            Image:        img,
-            Cmd:          cmd,
-            AttachStdout: true,
-            AttachStderr: true,
-            AttachStdin:  true,
-            OpenStdin:    true, // Container will expect input
-            StdinOnce:    true, // Close stdin after the input is provided
-        },
-    })
-    if err != nil {
-        return "", fmt.Errorf("failed to create Docker container: %w", err)
-    }
-    defer de.cleanup(container.ID)
+	// Create container with stdin open
+	container, err := de.client.CreateContainer(docker.CreateContainerOptions{
+		Config: &docker.Config{
+			Image:        img,
+			Cmd:          cmd,
+			AttachStdout: true,
+			AttachStderr: true,
+			AttachStdin:  true,
+			OpenStdin:    true,
+			StdinOnce:    true,
+		},
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to create Docker container: %w", err)
+	}
+	defer de.cleanup(container.ID)
 
-    // Start the container
-    log.Println("Starting Docker container")
-    if err := de.client.StartContainer(container.ID, nil); err != nil {
-        return "", fmt.Errorf("failed to start Docker container: %w", err)
-    }
+	if err := de.client.StartContainer(container.ID, nil); err != nil {
+		return "", fmt.Errorf("failed to start Docker container: %w", err)
+	}
 
-    // Send input if provided
-    if len(input) > 0 {
-        log.Println("Sending input to container")
-        if err := de.sendInputDirectly(container.ID, input); err != nil {
-            return "", fmt.Errorf("failed to send input to container: %w", err)
-        }
-    }
+	// Send input if provided
+	if len(input) > 0 {
+		if err := de.sendInputDirectly(container.ID, input); err != nil {
+			return "", fmt.Errorf("failed to send input to container: %w", err)
+		}
+	}
 
-    // Wait for the container to finish with a timeout
-    log.Println("Waiting for container to finish")
-    if err := de.waitForContainer(container.ID, 60*time.Second); err != nil {
-        return "", fmt.Errorf("error waiting for container: %w", err)
-    }
 
-    // Fetch logs after execution
-    log.Println("Fetching logs from container")
-    output, err := de.getLogs(container.ID)
-    if err != nil {
-        return "", err
-    }
+	if err := de.waitForContainer(container.ID, 60*time.Second); err != nil {
+		return "", fmt.Errorf("error waiting for container: %w", err)
+	}
 
-    return output, nil
+	output, err := de.getLogs(container.ID)
+	if err != nil {
+		return "", err
+	}
+
+	return output, nil
 }
 
-
 func (de *DockerExecutor) sendInputDirectly(containerID, input string) error {
-	log.Println("Attaching input stream to container")
 
 	// Attach to the container's stdin, stdout, and stderr
 	inputBuffer := bytes.NewBufferString(input)
 
 	opts := docker.AttachToContainerOptions{
-		Container:    containerID,
-		InputStream:  inputBuffer,
-		Stdin:        true,
-		Stream:       true,
-		Stdout:       false,
-		Stderr:       false,
+		Container:   containerID,
+		InputStream: inputBuffer,
+		Stdin:       true,
+		Stream:      true,
+		Stdout:      false,
+		Stderr:      false,
 	}
 
 	// Attach input stream to container
@@ -174,11 +164,8 @@ func (de *DockerExecutor) sendInputDirectly(containerID, input string) error {
 		return fmt.Errorf("failed to send input to container: %w", err)
 	}
 
-	log.Println("Successfully sent input to container")
 	return nil
 }
-
-
 
 func (de *DockerExecutor) sendInputToContainer(containerID, input string) error {
 
@@ -221,7 +208,7 @@ func (de *DockerExecutor) waitForContainer(containerID string, timeout time.Dura
 	done := make(chan error, 1)
 
 	go func() {
-		_, err := de.client.WaitContainer(containerID)  // Block until container finishes
+		_, err := de.client.WaitContainer(containerID) // Block until container finishes
 		done <- err
 	}()
 

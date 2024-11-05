@@ -36,10 +36,10 @@ type SubmissionDTO struct {
 }
 
 type TestCaseDTO struct {
-	ID        string `json"id"`
-	ProblemID string `json"problemID"`
-	Input     string `json"input"`
-	Output    string `json"output"`
+	ID        string `json:"id"`
+	ProblemID string `json:"problemID"`
+	Input     string `json:"input"`
+	Output    string `json:"output"`
 }
 
 type ProblemSubmissionDTO struct {

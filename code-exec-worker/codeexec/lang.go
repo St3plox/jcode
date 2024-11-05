@@ -7,6 +7,7 @@ import (
 	"github.com/St3pegor/jcode/broker"
 )
 
+//TODO: remake this using interface
 // genCmd generates cmd commands to launch code on a specific language
 func genCmd(code string, lang broker.Language) ([]string, error) {
 

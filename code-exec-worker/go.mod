@@ -4,7 +4,7 @@ go 1.22.6
 
 require (
 	github.com/St3plox/Blogchain v0.4.1
-	github.com/ardanlabs/conf/v3 v3.1.7
+	github.com/ardanlabs/conf/v3 v3.2.0
 	github.com/confluentinc/confluent-kafka-go/v2 v2.5.3
 	github.com/fsouza/go-dockerclient v1.12.0
 	github.com/google/uuid v1.6.0
