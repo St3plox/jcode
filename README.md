@@ -21,7 +21,6 @@
 </div>
 
 
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -48,6 +47,9 @@
 </details>
 
 
+## Languages
+- [English](README.md)
+- [Русский](README.ru.md)
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
