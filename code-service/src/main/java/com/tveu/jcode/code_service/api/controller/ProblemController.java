@@ -30,7 +30,7 @@ public class ProblemController {
     }
 
     @PutMapping(Path.PROBLEM_PUT)
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public ProblemDTO updateProblem(@PathVariable String id, @RequestBody ProblemUpdateRequest updateRequest) {
 
         return problemService.update(id, updateRequest);

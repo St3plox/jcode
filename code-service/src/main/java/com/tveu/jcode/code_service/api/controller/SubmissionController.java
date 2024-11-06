@@ -30,7 +30,7 @@ public class SubmissionController {
     }
 
     @PatchMapping(Path.SUBMISSION_PATCH)
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public SubmissionDTO updateStatus(@RequestParam String id, @RequestParam String status) {
 
         return submissionService.updateStatusByID(id, status);

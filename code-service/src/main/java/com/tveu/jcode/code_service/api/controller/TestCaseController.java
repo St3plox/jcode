@@ -40,7 +40,7 @@ public class TestCaseController {
     }
 
     @PutMapping(Path.TEST_CASE_PUT)
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public TestCaseDTO updateTestCase(@PathVariable String id, @RequestBody TestCaseUpdateRequest updateRequest) {
 
         return testCaseService.update(id, updateRequest);
