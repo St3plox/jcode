@@ -37,9 +37,13 @@ public class ProblemResultServiceImpl implements ProblemResultService {
 
         log.info("saving test results");
         testResultRepository.saveAll(testResultMapper.map(resultEvent.testResults()));
+        System.out.println(UUID.fromString(resultEvent.resultDTO().submissionID()));
+        System.out.println("--------------------------------------------");
 
         var problemSubmission = submissionRepository.findById(UUID.fromString(resultEvent.resultDTO().submissionID()))
                 .orElseThrow(() -> new ServiceException(ErrorCode.OBJECT_NOT_FOUND, "Submission not found"));
+
+
 
         log.info("saving resultDTO");
 
