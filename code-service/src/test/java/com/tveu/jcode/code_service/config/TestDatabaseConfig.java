@@ -1,18 +1,15 @@
 package com.tveu.jcode.code_service.config;
 
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.sql.DataSource;
 
-@Configuration
+@TestConfiguration
 @Testcontainers
 public class TestDatabaseConfig {
 
