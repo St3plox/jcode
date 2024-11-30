@@ -8,7 +8,6 @@ import lombok.Builder;
 public record ProblemCreateRequest(
 
         @JsonProperty(value = "user_id")
-        @NotBlank
         Long userId,
 
         @NotBlank
