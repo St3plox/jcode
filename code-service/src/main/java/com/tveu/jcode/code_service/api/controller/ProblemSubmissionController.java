@@ -6,6 +6,7 @@ import com.tveu.jcode.code_service.api.dto.ProblemSubmissionCreateRequest;
 import com.tveu.jcode.code_service.api.dto.ProblemSubmissionDTO;
 import com.tveu.jcode.code_service.core.service.ProblemSubmissionService;
 import com.tveu.jcode.code_service.core.util.ResponseUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Problem Submission Controller", description = "Handles user's code submissions " +
+        "for leet-code like problems(tasks)")
 @RestController
 @RequiredArgsConstructor
 public class ProblemSubmissionController {

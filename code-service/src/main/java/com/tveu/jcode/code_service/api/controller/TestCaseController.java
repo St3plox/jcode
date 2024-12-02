@@ -7,6 +7,7 @@ import com.tveu.jcode.code_service.api.dto.TestCaseDTO;
 import com.tveu.jcode.code_service.api.dto.TestCaseUpdateRequest;
 import com.tveu.jcode.code_service.core.service.TestCaseService;
 import com.tveu.jcode.code_service.core.util.ResponseUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "Test Case Controller", description = "Handles test-cases for lc-style problems")
 @RestController
 @RequiredArgsConstructor
 public class TestCaseController {

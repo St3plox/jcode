@@ -7,11 +7,13 @@ import com.tveu.jcode.code_service.api.dto.SubmissionCreateRequest;
 import com.tveu.jcode.code_service.api.dto.SubmissionDTO;
 import com.tveu.jcode.code_service.core.service.SubmissionService;
 import com.tveu.jcode.code_service.core.util.ResponseUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Submission Controller", description = "Handles users code submissions")
 @RestController
 @RequiredArgsConstructor
 public class SubmissionController {

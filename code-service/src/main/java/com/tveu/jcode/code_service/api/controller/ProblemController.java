@@ -7,11 +7,13 @@ import com.tveu.jcode.code_service.api.dto.ProblemDTO;
 import com.tveu.jcode.code_service.api.dto.ProblemUpdateRequest;
 import com.tveu.jcode.code_service.core.service.ProblemService;
 import com.tveu.jcode.code_service.core.util.ResponseUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Problem Controller", description = "Handles leet-code like problems (tasks)")
 @RestController
 @RequiredArgsConstructor
 public class ProblemController {
